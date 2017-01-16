@@ -52,7 +52,7 @@ process CODEX_normalize_perchr {
         shell:
         file_tag = chr
         '''
-	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.outdir} !{params.bedFile} !{params.rem_from_bed} !{params.project} $chr
+	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} !{params.rem_from_bed} !{params.project} $chr
         '''
 }
 
@@ -65,8 +65,8 @@ process CODEX_segmentation_allchr {
     file chr_file from chr_files.toList()
     
     output:
-    file("*.txt") into outfiles
-    publishDir params.out_folder, mode: 'move'
+    file("*.txt") into outdir
+    publishDir params.outdir, mode: 'move'
 
     shell:
     '''
