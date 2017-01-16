@@ -6,7 +6,7 @@
 
 args <- commandArgs(trailingOnly=TRUE)
 dirNormal    = args[1]
-DirTumor     = args[2]
+dirTumor     = args[2]
 outdir       = args[3]
 bedFile      = args[4]
 rem_from_bed = args[5]
@@ -20,8 +20,8 @@ bamFile_Normal<- bamFile_Normal
 bamdir_Normal <- file.path(dirNormal, bamFile_Normal)
 bamdir_Normal<- bamdir_Normal
 
-bamFile_Tumor <- list.files(DirTumor, pattern = '*.bam$')
-bamdir_Tumor <- file.path(DirTumor, bamFile_Tumor)
+bamFile_Tumor <- list.files(dirTumor, pattern = '*.bam$')
+bamdir_Tumor <- file.path(dirTumor, bamFile_Tumor)
 
 bamFile <- c(bamFile_Normal, bamFile_Tumor )
 bamdir <- c(bamdir_Normal, bamdir_Tumor )
@@ -30,6 +30,11 @@ bamdir <- c(bamdir_Normal, bamdir_Tumor )
 sampname <- as.matrix(rep(0,length(bamFile)),length(bamFile),1)
 for (i in 1:length(bamFile)){
   sampname[i,]=strsplit(bamFile,".bam")[[i]][1]
+}
+
+sampnameN <- as.matrix(rep(0,length(bamFile_Normal)),length(bamFile_Normal),1)
+for (i in 1:length(bamFile_Normal)){
+  sampnameN[i,]=strsplit(bamFile_Normal,".bam")[[i]][1]
 }
 
 #read bed file
@@ -57,7 +62,8 @@ mapp <- getmapp(chr, ref)
 qcObj <- qc(Y, sampname, chr, ref, mapp, gc, cov_thresh = c(20, 4000),length_thresh = c(20, 2000), mapp_thresh = 0.9, gc_thresh = c(20, 80))
 sampname_qc <- qcObj$sampname_qc
 qcmat <- qcObj$qcmat
-normal_index = grep("_T", sampname_qc,invert=TRUE)
+normal_index = which(sapply(1:length(sampname_qc), function(i) (sampname_qc[i] %in% sampnameN) ) )
+    
 norm.no.reads = which(apply((qcObj$Y_qc)[, normal_index], 1, median)==0)
 if( length(norm.no.reads)>0 ){#in case some exons have a low read count
     Y_qc<- qcObj$Y_qc[-norm.no.reads,]
@@ -73,7 +79,7 @@ if( length(norm.no.reads)>0 ){#in case some exons have a low read count
 write.table(qcmat, file = paste(projectname,'_',cur_chr,'_qcmat','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 
 source("segmentbis.R")
-normObj <- normalize2bis(Y_qc, gc_qc, K = 1:10, normal_index=grep("_T", sampname_qc,invert=TRUE))
+normObj <- normalize2(Y_qc, gc_qc, K = 1:10, normal_index)
 Yhat  <- normObj$Yhat
 AIC  <- normObj$AIC
 BIC  <- normObj$BIC
