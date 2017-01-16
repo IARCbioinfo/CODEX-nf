@@ -14,6 +14,7 @@ params.outdir       = "."
 params.bedFile      = "positions.bed"
 params.rem_from_bed = "_random|chrUn|GL000209R|GL000191R|GL000194R"
 params.project      = ""
+params.help         = null
 
 if (params.help) {
     log.info ''
