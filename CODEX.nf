@@ -15,6 +15,8 @@ params.bedFile      = "positions.bed"
 params.rem_from_bed = "_random|chrUn|GL000209R|GL000191R|GL000194R"
 params.project      = ""
 params.help         = null
+params.mem          = 5
+params.cpus         = 1
 
 if (params.help) {
     log.info ''
