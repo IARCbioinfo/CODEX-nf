@@ -27,16 +27,13 @@ if (params.help) {
     log.info ''
     log.info 'Mandatory arguments:'
     log.info '    --input_folder   FOLDER                  Folder containing BAM or fastq files to be aligned.'
-    log.info '    --fasta_ref          FILE                    Reference fasta file (with index).'
     log.info 'Optional arguments:'
     log.info '    --indel_realignment                    Performs local indel realignment (default: no).'
     log.info ''
     exit 1
 }
 
-//read files
-fasta_ref = file(params.fasta_ref)
-fasta_ref_fai = file( params.fasta_ref+'.fai' )
+//create channel
 chrs = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
 
 process CODEX_normalize_perchr {
