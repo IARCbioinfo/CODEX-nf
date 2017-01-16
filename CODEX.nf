@@ -25,7 +25,7 @@ if (params.help) {
     log.info '-------------------------------------------------------------'
     log.info ''
     log.info 'Usage: '
-    log.info 'nextflow run CODEX-nf --input_folder input/ [--cpu 8] [--mem 32] [--RG "PL:ILLUMINA"] [--fastq_ext fastq.gz] [--suffix1 _1] [--suffix2 _2] [--out_folder output/]'
+    log.info 'nextflow run CODEX-nf --input_folder input/ [--cpus 8] [--mem 32] [--RG "PL:ILLUMINA"] [--fastq_ext fastq.gz] [--suffix1 _1] [--suffix2 _2] [--out_folder output/]'
     log.info ''
     log.info 'Mandatory arguments:'
     log.info '    --input_folder   FOLDER                  Folder containing BAM or fastq files to be aligned.'
@@ -39,7 +39,7 @@ if (params.help) {
 chrs = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
 
 process CODEX_normalize_perchr {
-        cpus params.cpu
+        cpus params.cpus
         memory params.mem+'G'
         tag { file_tag }
         
@@ -57,7 +57,7 @@ process CODEX_normalize_perchr {
 }
 
 process CODEX_segmentation_allchr {
-    cpus params.cpu
+    cpus params.cpus
     memory params.mem+'G'
     tag { file_tag }
         
