@@ -77,7 +77,6 @@ if( length(norm.no.reads)>0 ){#in case some exons have a low read count
 }
 write.table(qcmat, file = paste(projectname,'_',cur_chr,'_qcmat','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 
-source("segmentbis.R")
 normObj <- normalize2(Y_qc, gc_qc, K = 1:10, normal_index)
 Yhat  <- normObj$Yhat
 AIC  <- normObj$AIC
