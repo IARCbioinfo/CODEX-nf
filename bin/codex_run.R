@@ -7,11 +7,10 @@
 args <- commandArgs(trailingOnly=TRUE)
 dirNormal    = args[1]
 dirTumor     = args[2]
-outdir       = args[3]
-bedFile      = args[4]
-rem_from_bed = args[5]
-project      = args[6]
-cur_chr      = args[7]
+bedFile      = args[3]
+rem_from_bed = args[4]
+project      = args[5]
+cur_chr      = args[6]
 
 #get bam files paths
 bamFile_Normal <- list.files(dirNormal, pattern = '*.bam$')
