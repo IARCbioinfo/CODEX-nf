@@ -62,7 +62,7 @@ process CODEX_segmentation_allchr {
     tag { file_tag }
         
     input:
-    chr from chr_files.toList()
+    file chr_file from chr_files.toList()
     
     output:
     file("*.txt") into outfiles
