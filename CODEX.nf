@@ -41,25 +41,25 @@ chrs = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','ch
 process CODEX_normalize_perchr {
         cpus params.cpus
         memory params.mem+'G'
-        tag { file_tag }
+        tag { chr_tag }
         
         input:
-	env chr from chrs
+	val chr from chrs
      
         output:
 	file("*.txt") into chr_files
 	
         shell:
-        file_tag = chr
+        chr_tag = chr
         '''
-	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} !{params.rem_from_bed} !{params.project} $chr
+	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} !{params.rem_from_bed} !{params.project} !{chr}
         '''
 }
 
 process CODEX_segmentation_allchr {
     cpus params.cpus
     memory params.mem+'G'
-    tag { file_tag }
+    tag { 'segmentation' }
         
     input:
     file chr_file from chr_files.toList()
