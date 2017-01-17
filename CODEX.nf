@@ -17,6 +17,7 @@ params.project      = ""
 params.help         = null
 params.mem          = 5
 params.cpus         = 1
+params.seg_mode     = "fraction"
 
 if (params.help) {
     log.info ''
@@ -36,7 +37,8 @@ if (params.help) {
 }
 
 //create channel
-chrs = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
+chrs  = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
+chrs2 = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
 
 process CODEX_normalize_perchr {
         cpus params.cpus
@@ -47,7 +49,12 @@ process CODEX_normalize_perchr {
 	val chr from chrs
      
         output:
-	file("*.txt") into chr_files
+	file("*Y_qc.txt") into Y_qc_files
+	file("*Yhat.txt") into Yhat_files
+	file("*optK.txt") into optK_files
+	file("*qcmat.txt") into qcmat_files
+	file("*ref_qc.txt") into ref_qc_files
+	file("*sampname_qc.txt") into sampname_qc_files
 	
         shell:
         chr_tag = chr
@@ -56,20 +63,43 @@ process CODEX_normalize_perchr {
         '''
 }
 
-process CODEX_segmentation_allchr {
+process CODEX_findoptK_allchr {
     cpus params.cpus
     memory params.mem+'G'
-    tag { 'segmentation' }
+    tag { 'findoptK' }
         
     input:
-    file chr_file from chr_files.toList()
-    
+    file optK from optK_files.toList()
+	    
+    output:
+    file("optKallchr.txt") into optKallchr
+
+    shell:
+    '''
+    cat *optK.txt | sort -g | head -n1 > optKallchr.txt
+    '''
+}
+
+process CODEX_segmentation_perchr {
+    cpus params.cpus
+    memory params.mem+'G'
+    tag { 'segmentation'+chr_tag }
+        
+    input:
+    val chr from chrs2
+    file Y_qc from Y_qc_files
+    file Yhat from Yhat_files
+    file optKallchr from optKallchr
+    file qcmat from qcmat_files
+    file ref_qc from ref_qc_files
+    file sampname_qc from sampname_qc_files
+	    
     output:
     file("*.txt") into outdir
     publishDir params.outdir, mode: 'move'
 
     shell:
     '''
-    
+    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} !{optKallchr} !{sampname_qc} !{ref_qc} !{params.projectname} !{chr}   
     '''
 }

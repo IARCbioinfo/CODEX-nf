@@ -91,6 +91,7 @@ optK = K[which.max(BIC)]
 write.table(Y_qc, file = paste(projectname,'_',cur_chr,'_Y_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 write.table(Yhat, file = paste(projectname,'_',cur_chr,'_Yhat','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 write(optK,file        = paste(projectname,'_',cur_chr,'_optK','.txt', sep='') )
-write.table(sampname_qc,file = paste(projectname,'_',cur_chr,'_sampname_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 write.table(ref_qc,file = paste(projectname,'_',cur_chr,'_ref_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
+write.table(sampname_qc,file = paste(projectname,'_',cur_chr,'_sampname_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
+
 
