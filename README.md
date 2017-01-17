@@ -12,7 +12,7 @@ and the following files:
 
 ## Usage
 ```bash
-nextflow run CODEX-nf --dirNormal Normal --dirTumor Tumor --bedFile positions.bed --outdir output
+nextflow run iarcbioinfo/CODEX-nf --dirNormal Normal --dirTumor Tumor --bedFile positions.bed --outdir output
 ```
 
 ## Output
