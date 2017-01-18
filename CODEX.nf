@@ -100,6 +100,7 @@ process CODEX_segmentation_perchr {
 
     shell:
     '''
-    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} !{optKallchr} !{sampname_qc} !{ref_qc} !{params.projectname} !{chr}   
+    K=`cat !{optKallchr}`
+    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.projectname} !{chr}   
     '''
 }
