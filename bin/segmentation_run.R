@@ -1,4 +1,5 @@
 #get arguments
+library(CODEX)
 args <- commandArgs(trailingOnly=TRUE)
 mode        = args[1]
 Y_qc        = read.table(args[2],h=T)
