@@ -69,7 +69,7 @@ process CODEX_findoptK_allchr {
     tag { 'findoptK'+chr }
         
     input:
-    val chr into chr_tag
+    val chr from chr_tag
     file optK from optK_files.toList()
 	    
     output:
