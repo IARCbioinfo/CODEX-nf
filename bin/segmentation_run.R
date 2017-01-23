@@ -114,4 +114,4 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
 # compute segmentation
 finalcall<- segmentbis(Y_qc, Yhat, optK = optKallchr, K = K, sampname_qc,ref_qc, chr, lmax = 200, mode = mode)
 # write results
-write.table(finalcall, file = paste(projectname,'_results_',chr,'_K', optK,'_',mode,'.txt', sep=''), sep='\t', quote=FALSE, row.names=FALSE)
+write.table(finalcall, file = paste(projectname,'_results_',chr,'_K', optKallchr,'_',mode,'.txt', sep=''), sep='\t', quote=FALSE, row.names=FALSE)
