@@ -83,7 +83,7 @@ process CODEX_findoptK_allchr {
 process CODEX_segmentation_perchr {
     cpus params.cpus
     memory params.mem+'G'
-    tag { 'segmentation'+chr_tag }
+    tag { chr }
         
     input:
     file Y_qc from Y_qc_files
