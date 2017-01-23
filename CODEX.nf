@@ -13,7 +13,7 @@ params.dirTumor     = "Tumor"
 params.outdir       = "."
 params.bedFile      = "positions.bed"
 params.rem_from_bed = "_random|chrUn|GL000209R|GL000191R|GL000194R"
-params.project      = ""
+params.project      = "codex"
 params.help         = null
 params.mem          = 5
 params.cpus         = 1
@@ -66,15 +66,26 @@ process CODEX_normalize_perchr {
 process CODEX_findoptK_allchr {
     cpus params.cpus
     memory params.mem+'G'
-    tag { 'findoptK'+chr }
+    tag { chr}
         
     input:
     val chr from chr_tag
     file optK from optK_files.toList()
+    file Y_qc from Y_qc_files
+    file Yhat from Yhat_files
+    file optKallchr from optKallchr
+    file qcmat from qcmat_files
+    file ref_qc from ref_qc_files
+    file sampname_qc from sampname_qc_files
 	    
     output:
     file("optKallchr.txt") into optKallchr
-    val chr into chr_tag2
+    val chr into chr_list2
+    file Y_qc into Y_qc_files2
+    file Yhat into Yhat_files2
+    file qcmat into qcmat_files2
+    file ref_qc into ref_qc_files2
+    file sampname_qc into sampname_qc_files2
 
     shell:
     '''
@@ -85,22 +96,23 @@ process CODEX_findoptK_allchr {
 process CODEX_segmentation_perchr {
     cpus params.cpus
     memory params.mem+'G'
-    tag { chr }
+    tag { chr_tag }
         
     input:
-    val chr from chr_tag2
-    file Y_qc from Y_qc_files
-    file Yhat from Yhat_files
+    val chr from chr_list2
     file optKallchr from optKallchr
-    file qcmat from qcmat_files
-    file ref_qc from ref_qc_files
-    file sampname_qc from sampname_qc_files
+    file Y_qc from Y_qc_files2
+    file Yhat from Yhat_files2
+    file qcmat from qcmat_files2
+    file ref_qc from ref_qc_files2
+    file sampname_qc from sampname_qc_files2
 	    
     output:
-    file("*.txt") into outdir
+    file("*results*.txt") into outdir
     publishDir params.outdir, mode: 'move'
 
     shell:
+    chr_tag = chr
     '''
     K=`cat !{optKallchr}`
     Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project}
