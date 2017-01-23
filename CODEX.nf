@@ -54,6 +54,7 @@ process CODEX_normalize_perchr {
 	file("*qcmat.txt") into qcmat_files
 	file("*ref_qc.txt") into ref_qc_files
 	file("*sampname_qc.txt") into sampname_qc_files
+	val chr into chr_tag
 	
         shell:
         chr_tag = chr
@@ -91,6 +92,7 @@ process CODEX_segmentation_perchr {
     file qcmat from qcmat_files
     file ref_qc from ref_qc_files
     file sampname_qc from sampname_qc_files
+    val chr from chr_tag
 	    
     output:
     file("*.txt") into outdir
@@ -102,3 +104,4 @@ process CODEX_segmentation_perchr {
     Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project}
     '''
 }
+
