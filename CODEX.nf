@@ -73,7 +73,6 @@ process CODEX_findoptK_allchr {
     file optK from optK_files.toList()
     file Y_qc from Y_qc_files
     file Yhat from Yhat_files
-    file optKallchr from optKallchr
     file qcmat from qcmat_files
     file ref_qc from ref_qc_files
     file sampname_qc from sampname_qc_files
