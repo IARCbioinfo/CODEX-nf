@@ -11,7 +11,7 @@ bedFile      = args[3]
 rem_from_bed = args[4]
 project      = args[5]
 cur_chr      = args[6]
-Kmax         = args[7]
+Kmax         = as.numeric(args[7])
 
 #get bam files paths
 bamFile_Normal <- list.files(dirNormal, pattern = '*.bam$')
