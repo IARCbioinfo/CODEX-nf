@@ -11,6 +11,7 @@ bedFile      = args[3]
 rem_from_bed = args[4]
 project      = args[5]
 cur_chr      = args[6]
+Kmax         = args[7]
 
 #get bam files paths
 bamFile_Normal <- list.files(dirNormal, pattern = '*.bam$')
@@ -76,8 +77,13 @@ if( length(norm.no.reads)>0 ){#in case some exons have a low read count
     ref_qc <- qcObj$ref_qc
 }
 write.table(qcmat, file = paste(projectname,'_',cur_chr,'_qcmat','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
+write.table(Y_qc, file = paste(projectname,'_',cur_chr,'_Y_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
+write.table(ref_qc,file = paste(projectname,'_',cur_chr,'_ref_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
+write.table(sampname_qc,file = paste(projectname,'_',cur_chr,'_sampname_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 
-normObj <- normalize2(Y_qc, gc_qc, K = 1:10, normal_index)
+Kmax = min(Kmax,length(normal_index))
+
+normObj <- normalize2(Y_qc, gc_qc, K = 1:Kmax, normal_index)
 Yhat  <- normObj$Yhat
 AIC  <- normObj$AIC
 BIC  <- normObj$BIC
@@ -88,10 +94,6 @@ choiceofK(AIC, BIC, RSS, K, filename = paste(projectname, "_",cur_chr,"_choiceof
 optK = K[which.max(BIC)]
 
 # write files
-write.table(Y_qc, file = paste(projectname,'_',cur_chr,'_Y_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 write.table(Yhat, file = paste(projectname,'_',cur_chr,'_Yhat','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
 write(optK,file        = paste(projectname,'_',cur_chr,'_optK','.txt', sep='') )
-write.table(ref_qc,file = paste(projectname,'_',cur_chr,'_ref_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
-write.table(sampname_qc,file = paste(projectname,'_',cur_chr,'_sampname_qc','.txt', sep=''),sep='\t', quote=FALSE, row.names=FALSE)
-
 

@@ -4,8 +4,9 @@ args <- commandArgs(trailingOnly=TRUE)
 mode        = args[1]
 Y_qc        = read.table(args[2],h=T)
 sampname_qc = scan(args[5],what="character",skip=1)
-K           = 1:10
 Yhat        = read.table(args[3],h=T)
+Kmax        = ncol(Yhat)/length(sampname_qc)
+K           = 1:Kmax
 Yhat        = lapply(K-1, function(i) Yhat[,(1+length(sampname_qc)*i):(length(sampname_qc)*(i+1))] )
 optKallchr  = as.numeric(args[4])
 ref_qc      = read.table(args[6],h=T)

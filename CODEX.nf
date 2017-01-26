@@ -18,6 +18,7 @@ params.help         = null
 params.mem          = 5
 params.cpus         = 1
 params.seg_mode     = "fraction"
+params.Kmax         = 10
 
 if (params.help) {
     log.info ''
@@ -59,7 +60,7 @@ process CODEX_normalize_perchr {
         shell:
         chr_tag = chr
         '''
-	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} "!{params.rem_from_bed}" !{params.project} !{chr}
+	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} "!{params.rem_from_bed}" !{params.project} !{chr} !{params.Kmax}
         '''
 }
 
