@@ -33,7 +33,7 @@ if (params.help) {
     log.info 'Mandatory arguments:'
     log.info '    --input_folder   FOLDER                  Folder containing BAM or fastq files to be aligned.'
     log.info 'Optional arguments:'
-    log.info '    --Kmax	10                   Maximum number of latent factors to be tested
+    log.info '    --Kmax	10                   Maximum number of latent factors to be tested. '
     log.info ''
     exit 1
 }
