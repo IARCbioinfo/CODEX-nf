@@ -19,6 +19,7 @@ params.mem          = 5
 params.cpus         = 1
 params.seg_mode     = "fraction"
 params.Kmax         = 10
+params.covmin       = 0
 
 if (params.help) {
     log.info ''
@@ -32,7 +33,7 @@ if (params.help) {
     log.info 'Mandatory arguments:'
     log.info '    --input_folder   FOLDER                  Folder containing BAM or fastq files to be aligned.'
     log.info 'Optional arguments:'
-    log.info '    --indel_realignment                    Performs local indel realignment (default: no).'
+    log.info '    --Kmax	10                   Maximum number of latent factors to be tested
     log.info ''
     exit 1
 }
@@ -60,7 +61,7 @@ process CODEX_normalize_perchr {
         shell:
         chr_tag = chr
         '''
-	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} "!{params.rem_from_bed}" !{params.project} !{chr} !{params.Kmax}
+	Rscript !{baseDir}/bin/codex_run.R !{params.dirNormal} !{params.dirTumor} !{params.bedFile} "!{params.rem_from_bed}" !{params.project} !{chr} !{params.Kmax} !{params.covmin}
         '''
 }
 

@@ -1,7 +1,7 @@
 ################################################################
 ####          CNV AC using CODEX all chromosome 
 ####                  04/01/2017
-####                Noémie Leblay
+####                Noémie Leblay and Nicolas Alcala
 ################################################################
 
 args <- commandArgs(trailingOnly=TRUE)
@@ -12,6 +12,7 @@ rem_from_bed = args[4]
 project      = args[5]
 cur_chr      = args[6]
 Kmax         = as.numeric(args[7])
+covmin       = as.numeric(args[8])
 
 #get bam files paths
 bamFile_Normal <- list.files(dirNormal, pattern = '*.bam$')
@@ -64,7 +65,7 @@ sampname_qc <- qcObj$sampname_qc
 qcmat <- qcObj$qcmat
 normal_index = which(sapply(1:length(sampname_qc), function(i) (sampname_qc[i] %in% sampnameN) ) )
     
-norm.no.reads = which(apply((qcObj$Y_qc)[, normal_index], 1, median)==0)
+norm.no.reads = which(apply((qcObj$Y_qc)[, normal_index], 1, median)<=covmin)
 if( length(norm.no.reads)>0 ){#in case some exons have a low read count
     Y_qc<- qcObj$Y_qc[-norm.no.reads,]
     gc_qc <- qcObj$gc_qc[-norm.no.reads]
