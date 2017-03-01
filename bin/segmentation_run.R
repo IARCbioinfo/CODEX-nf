@@ -1,10 +1,12 @@
 #get arguments
+library(CODEX)
 args <- commandArgs(trailingOnly=TRUE)
 mode        = args[1]
 Y_qc        = read.table(args[2],h=T)
 sampname_qc = scan(args[5],what="character",skip=1)
-K           = 1:10
 Yhat        = read.table(args[3],h=T)
+Kmax        = ncol(Yhat)/length(sampname_qc)
+K           = 1:Kmax
 Yhat        = lapply(K-1, function(i) Yhat[,(1+length(sampname_qc)*i):(length(sampname_qc)*(i+1))] )
 optKallchr  = as.numeric(args[4])
 ref_qc      = read.table(args[6],h=T)
@@ -113,4 +115,4 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
 # compute segmentation
 finalcall<- segmentbis(Y_qc, Yhat, optK = optKallchr, K = K, sampname_qc,ref_qc, chr, lmax = 200, mode = mode)
 # write results
-write.table(finalcall, file = paste(projectname,'_results_',chr,'_K', optK,'_',mode,'.txt', sep=''), sep='\t', quote=FALSE, row.names=FALSE)
+write.table(finalcall, file = paste(projectname,'_results_',chr,'_K', optKallchr,'_',mode,'.txt', sep=''), sep='\t', quote=FALSE, row.names=FALSE)
