@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 ################################################################
 ####          CNV AC using CODEX all chromosome 
 ####                  04/01/2017

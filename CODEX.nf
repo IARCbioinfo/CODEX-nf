@@ -1,8 +1,5 @@
 #! /usr/bin/env nextflow
-// usage : ./CODEX.nf --input_folder input/ --cpu 8 --mem 32 
-/*
-vim: syntax=groovy
--*- mode: groovy;-*- */
+// vim: syntax=groovy -*- mode: groovy;-*-
 
 // requirement:
 // - Rscript
@@ -116,7 +113,7 @@ process CODEX_segmentation_perchr {
     chr_tag = chr
     '''
     K=`cat !{optKallchr}`
-    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project}
+    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project} !{baseDir}/
     '''
 }
 
