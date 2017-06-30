@@ -67,7 +67,7 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
             if (mBIC[1] > 0) {
                 finalmat <- cbind(rep(sampname_qc[sampno], nrow(finalmat)), rep(chr, nrow(finalmat)), finalmat)
                 finalmat <- cbind(finalmat, mBIC) #[1:which.max(mBIC), ]) #also print CNVs with low BIC (e.g., non-significant)
-                finalmat[(which.max(mBIC)+1):length(mBIC),7] <- 2 #NEWLINE: put all CNVs after the max mBIC at 2
+                if( which.max(mBIC)<length(mBIC) ) finalmat[(which.max(mBIC)+1):length(mBIC),7] <- 2 #NEWLINE: put all CNVs after the max mBIC at 2
                 finalcall <- rbind(finalcall, finalmat)
             }
         }
