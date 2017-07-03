@@ -17,6 +17,7 @@ params.cpus         = 1
 params.seg_mode     = "fraction"
 params.Kmax         = 10
 params.covmin       = 0
+params.lmax         = 200
 
 if (params.help) {
     log.info ''
@@ -113,7 +114,7 @@ process CODEX_segmentation_perchr {
     chr_tag = chr
     '''
     K=`cat !{optKallchr}`
-    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project} !{baseDir}/
+    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project} !{baseDir}/ !{params.lmax}
     '''
 }
 
