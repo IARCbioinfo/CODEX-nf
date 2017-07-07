@@ -132,7 +132,7 @@ process CODEX_output {
         
     input:
     file results_seg.collect()
-    file optKallchr from optKallchr2
+    //file optKallchr from optKallchr2
 	    
     output:
     file("*codex.seg.txt") into outsegIGV
