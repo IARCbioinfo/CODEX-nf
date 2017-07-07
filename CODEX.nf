@@ -125,31 +125,6 @@ process CODEX_segmentation_perchr {
     '''
 }
 
-process CODEX_segmentation_perchr {
-    cpus params.cpus
-    memory params.mem+'G'
-    tag { chr_tag }
-        
-    input:
-    val chr from chr_list2
-    file optKallchr from optKallchr2
-    file Y_qc from Y_qc_files2
-    file Yhat from Yhat_files2
-    file qcmat from qcmat_files2
-    file ref_qc from ref_qc_files2
-    file sampname_qc from sampname_qc_files2
-	    
-    output:
-    file("*results*.txt") into results_seg
-
-    shell:
-    chr_tag = chr
-    '''
-    K=`cat !{optKallchr}`
-    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project} !{baseDir}/ !{params.lmax}
-    '''
-}
-
 process CODEX_output {
     cpus params.cpus
     memory params.mem+'G'
