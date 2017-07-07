@@ -11,13 +11,15 @@ params.outdir       = "."
 params.bedFile      = "positions.bed"
 params.rem_from_bed = "_random|chrUn|GL000209R|GL000191R|GL000194R"
 params.project      = "codex"
-params.help         = null
 params.mem          = 5
 params.cpus         = 1
 params.seg_mode     = "fraction"
 params.Kmax         = 10
 params.covmin       = 0
 params.lmax         = 200
+params.T_suffix     = "_T"
+
+params.help         = null
 
 if (params.help) {
     log.info ''
@@ -118,3 +120,52 @@ process CODEX_segmentation_perchr {
     '''
 }
 
+optKallchr.into { optKallchr1; optKallchr2 }
+
+process CODEX_segmentation_perchr {
+    cpus params.cpus
+    memory params.mem+'G'
+    tag { chr_tag }
+        
+    input:
+    val chr from chr_list2
+    file optKallchr from optKallchr1
+    file Y_qc from Y_qc_files2
+    file Yhat from Yhat_files2
+    file qcmat from qcmat_files2
+    file ref_qc from ref_qc_files2
+    file sampname_qc from sampname_qc_files2
+	    
+    output:
+    file("*results*.txt") into results_seg
+    publishDir params.outdir, mode: 'copy'
+
+    shell:
+    chr_tag = chr
+    '''
+    K=`cat !{optKallchr}`
+    Rscript !{baseDir}/bin/segmentation_run.R !{params.seg_mode} !{Y_qc} !{Yhat} $K !{sampname_qc} !{ref_qc} !{params.project} !{baseDir}/ !{params.lmax}
+    '''
+}
+
+process CODEX2IGV {
+    cpus params.cpus
+    memory params.mem+'G'
+    tag { chr_tag }
+        
+    input:
+    file results_seg.collect()
+    file optKallchr from optKallchr2
+	    
+    output:
+    file("*codex.seg.txt") into outseg
+    file("MarkerFile.txt") into mfile
+    publishDir params.outdir, mode: 'move'
+
+    shell:
+    chr_tag = chr
+    '''
+    K=`cat !{optKallchr}`
+    Rscript !{baseDir}/bin/CODEX_IGV.R !{params.project} $K !{params.seg_mode} !{params.T_suffix}
+    '''
+}
