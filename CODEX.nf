@@ -75,7 +75,7 @@ process CODEX_findoptK_allchr {
         
     input:
     val chr from chr_tag
-    file optK from optK_files.toList()
+    file optK from optK_files.collect()
     file Y_qc from Y_qc_files
     file Yhat from Yhat_files
     file qcmat from qcmat_files
@@ -97,6 +97,8 @@ process CODEX_findoptK_allchr {
     '''
 }
 
+optKallchr.into { optKallchr1; optKallchr2; optKallchr3 }
+
 process CODEX_segmentation_perchr {
     cpus params.cpus
     memory params.mem+'G'
@@ -104,7 +106,7 @@ process CODEX_segmentation_perchr {
         
     input:
     val chr from chr_list2
-    file optKallchr from optKallchr
+    file optKallchr from optKallchr1
     file Y_qc from Y_qc_files2
     file Yhat from Yhat_files2
     file qcmat from qcmat_files2
@@ -123,8 +125,6 @@ process CODEX_segmentation_perchr {
     '''
 }
 
-optKallchr.into { optKallchr1; optKallchr2 }
-
 process CODEX_segmentation_perchr {
     cpus params.cpus
     memory params.mem+'G'
@@ -132,7 +132,7 @@ process CODEX_segmentation_perchr {
         
     input:
     val chr from chr_list2
-    file optKallchr from optKallchr1
+    file optKallchr from optKallchr2
     file Y_qc from Y_qc_files2
     file Yhat from Yhat_files2
     file qcmat from qcmat_files2
@@ -157,7 +157,7 @@ process CODEX_output {
         
     input:
     file results_seg.collect()
-    file optKallchr from optKallchr2
+    file optKallchr from optKallchr3
 	    
     output:
     file("*codex.seg.txt") into outsegIGV
