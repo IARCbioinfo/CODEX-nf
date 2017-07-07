@@ -128,7 +128,7 @@ process CODEX_segmentation_perchr {
 process CODEX_output {
     cpus params.cpus
     memory params.mem+'G'
-    tag { chr_tag }
+    tag { 'output' }
         
     input:
     file results_seg.collect()
@@ -151,7 +151,7 @@ process CODEX_output {
 process annotation {
     cpus params.cpus
     memory params.mem+'G'
-    tag { chr_tag }
+    tag { 'annotation' }
         
     input:
     file outseg
