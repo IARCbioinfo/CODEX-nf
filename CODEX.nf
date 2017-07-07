@@ -18,6 +18,7 @@ params.Kmax         = 10
 params.covmin       = 0
 params.lmax         = 200
 params.T_suffix     = "_T"
+params.gtf          = "annot.gtf"
 
 params.help         = null
 
@@ -37,6 +38,8 @@ if (params.help) {
     log.info ''
     exit 1
 }
+
+gtf = file(params.gtf)
 
 //create channel
 chrs  = Channel.from( 'chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17','chr18','chr19','chr20','chr21','chr22','chrX','chrY' )
@@ -138,7 +141,6 @@ process CODEX_segmentation_perchr {
 	    
     output:
     file("*results*.txt") into results_seg
-    publishDir params.outdir, mode: 'copy'
 
     shell:
     chr_tag = chr
@@ -148,7 +150,7 @@ process CODEX_segmentation_perchr {
     '''
 }
 
-process CODEX2IGV {
+process CODEX_output {
     cpus params.cpus
     memory params.mem+'G'
     tag { chr_tag }
@@ -158,9 +160,10 @@ process CODEX2IGV {
     file optKallchr from optKallchr2
 	    
     output:
-    file("*codex.seg.txt") into outseg
+    file("*codex.seg.txt") into outsegIGV
+    file("*results_allchr_K*.txt") into outseg
     file("MarkerFile.txt") into mfile
-    publishDir params.outdir, mode: 'move'
+    publishDir params.outdir, mode: 'copy', pattern: '{*codex.seg.txt,MarkerFile.txt}'
 
     shell:
     chr_tag = chr
@@ -169,3 +172,24 @@ process CODEX2IGV {
     Rscript !{baseDir}/bin/CODEX_IGV.R !{params.project} $K !{params.seg_mode} !{params.T_suffix}
     '''
 }
+
+process annotation {
+    cpus params.cpus
+    memory params.mem+'G'
+    tag { chr_tag }
+        
+    input:
+    file outseg
+    file gtf
+	    
+    output:
+    file('allChr_annotated.txt')
+    publishDir params.outdir, mode: 'move'
+
+    shell:
+    chr_tag = chr
+    '''
+    Rscript !{baseDir}/bin/CODEX_IGV.R !{gtf} !{outseg}
+    '''
+}
+
