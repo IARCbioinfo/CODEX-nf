@@ -131,7 +131,7 @@ process CODEX_output {
     tag { 'output' }
         
     input:
-    file results_seg.collect()
+    //file results_seg.collect()
     //file optKallchr from optKallchr2
 	    
     output:
@@ -141,7 +141,6 @@ process CODEX_output {
     publishDir params.outdir, mode: 'copy', pattern: '{*codex.seg.txt,MarkerFile.txt}'
 
     shell:
-    chr_tag = chr
     '''
     K=`cat !{optKallchr}`
     Rscript !{baseDir}/bin/CODEX_IGV.R !{params.project} $K !{params.seg_mode} !{params.T_suffix}
@@ -162,7 +161,6 @@ process annotation {
     publishDir params.outdir, mode: 'move'
 
     shell:
-    chr_tag = chr
     '''
     Rscript !{baseDir}/bin/CODEX_IGV.R !{gtf} !{outseg}
     '''
