@@ -114,7 +114,7 @@ process CODEX_segmentation_perchr {
     file sampname_qc from sampname_qc_files2
 	    
     output:
-    file("*results*.txt") into outdir
+    file("*results*.txt") into results_seg
     publishDir params.outdir, mode: 'move'
 
     shell:
