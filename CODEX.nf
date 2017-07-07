@@ -97,7 +97,7 @@ process CODEX_findoptK_allchr {
     '''
 }
 
-optKallchr.into { optKallchr1; optKallchr2; optKallchr3 }
+optKallchr.into { optKallchr1; optKallchr2}
 
 process CODEX_segmentation_perchr {
     cpus params.cpus
@@ -132,7 +132,7 @@ process CODEX_output {
         
     input:
     file results_seg.collect()
-    file optKallchr from optKallchr3
+    file optKallchr from optKallchr2
 	    
     output:
     file("*codex.seg.txt") into outsegIGV
