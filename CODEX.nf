@@ -115,7 +115,7 @@ process CODEX_segmentation_perchr {
 	    
     output:
     file("*results*.txt") into results_seg
-    publishDir params.outdir, mode: 'move'
+    publishDir params.outdir, mode: 'copy'
 
     shell:
     chr_tag = chr
