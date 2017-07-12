@@ -31,12 +31,12 @@ for(i in 1:nrow(tumorsampname)){
 SEG = as.data.frame(SEG)
 colnames(SEG)=c('Sample', 'Chromosome','Start','End','Num_Probes', 'Segment_Mean')
 
-write.table(SEG,file=paste('all_samples_igv.codex.seg.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
+write.table(SEG,file=paste(projectname,'_all_samples_igv.codex.seg.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
 
 # select T and N
 SEG = SEG[grep(T_suffix,SEG$Sample),]
 
-write.table(SEG,file=paste('T_igv.codex.seg.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
+write.table(SEG,file=paste(projectname,'_T_igv.codex.seg.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
 
 markerfile_1             = SEG[,c(2:3)]
 markerfile_2             = SEG[,c(2,4)]
@@ -48,6 +48,6 @@ markerfile$V3            = c(1:nrow(markerfile))
 markerfile$ID            = paste("ID_",markerfile$V3,sep="")
 markerfile               = markerfile[,c(4,1:2)]
  
-write.table(markerfile,file = paste('MarkerFile.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
+write.table(markerfile,file = paste(projectname,'_MarkerFile.txt',sep=''),sep='\t',quote=F,col.names=T,row.names=F)
 
  
