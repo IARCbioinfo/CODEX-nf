@@ -137,8 +137,8 @@ process CODEX_output {
     output:
     file("*codex.seg.txt") into outsegIGV
     file("*results_allchr_K*.txt") into outseg
-    file("MarkerFile.txt") into mfile
-    publishDir params.outdir, mode: 'copy', pattern: '{*codex.seg.txt,MarkerFile.txt}'
+    file("*MarkerFile.txt") into mfile
+    publishDir params.outdir, mode: 'copy', pattern: '{*codex.seg.txt,*MarkerFile.txt}'
 
     shell:
     '''
