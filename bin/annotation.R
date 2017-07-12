@@ -34,7 +34,10 @@ gene_info2$gene_name=unlist(lapply(gene_info2$gene_name,function(x){strsplit(x, 
 CODEX=read.table(segfile,quote="\"",stringsAsFactors=F,sep="\t",header=T)
 
 #Annotation start and end gene involved in the CNV
-CODEX$Start_gene=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "st_bp"] & gene_info2$End>=CODEX[x, "st_bp"] & gene_info2$Chr==CODEX[x, "chr"],"gene_name"] if( length(res)==0){NA} else{paste(res, collapse=",")}}))
+CODEX$Start_gene=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "st_bp"] &
+                                                                                   gene_info2$End>=CODEX[x, "st_bp"] &
+                                                                                   gene_info2$Chr==CODEX[x, "chr"],"gene_name"]
+                                                                  if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 
 CODEX$End_gene=unlist(lapply(1:length(CODEX$End), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "ed_bp"] &
