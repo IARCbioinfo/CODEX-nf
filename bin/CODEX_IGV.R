@@ -6,9 +6,7 @@ optKallchr  = args[2]
 mode        = args[3]
 T_suffix    = args[4]
 
-finalcall.chr=read.table(paste(projectname,'_results_chr1_K', optKallchr,'_',mode,'.txt', sep=''),head=T,sep='\t')
-
-finalcall=finalcall.chr
+finalcall=read.table(paste(projectname,'_results_chr1_K', optKallchr,'_',mode,'.txt', sep=''),head=T,sep='\t')
 
 for(chr in c(2:22,'X','Y')){
   chr=paste('chr',chr, sep='')
@@ -17,7 +15,7 @@ for(chr in c(2:22,'X','Y')){
   finalcall=rbind(finalcall,finalcall.chr)
 }
 
-write.table(finalcall,file=paste(paste(projectname,'_results_allchr_K', optKallchr,'_',mode,'.txt', sep=''),sep='\t',quote=F,col.names=T,row.names=F)
+write.table(finalcall,file=paste(projectname,'_results_allchr_K', optKallchr,'_',mode,'.txt', sep=''),sep='\t',quote=F,col.names=T,row.names=F)
 
 tumorsampname=as.matrix(unique(finalcall[,1]))
 
