@@ -8,6 +8,7 @@
 args <- commandArgs(trailingOnly=TRUE)
 GTF     = args[1]
 segfile = args[2]
+projectname = args[3]
 
 gene2              = read.table(GTF,quote="\"",stringsAsFactors=F,sep="\t",header=F)
 colnames(gene2)[1] = "Chr"
@@ -33,53 +34,50 @@ gene_info2$gene_name=unlist(lapply(gene_info2$gene_name,function(x){strsplit(x, 
 CODEX=read.table(segfile,quote="\"",stringsAsFactors=F,sep="\t",header=T)
 
 #Annotation start and end gene involved in the CNV
-CODEX$Start_gene=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "Start"] &
-                                                                                   gene_info2$End>=CODEX[x, "Start"] &
-                                                                                   gene_info2$Chr==CODEX[x, "Chr"],"gene_name"]
-                                                                  if( length(res)==0){NA} else{paste(res, collapse=",")}}))
+CODEX$Start_gene=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "st_bp"] & gene_info2$End>=CODEX[x, "st_bp"] & gene_info2$Chr==CODEX[x, "chr"],"gene_name"] if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 
-CODEX$End_gene=unlist(lapply(1:length(CODEX$End), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "End"] &
-                                                                                 gene_info2$End>=CODEX[x, "End"] &
-                                                                                 gene_info2$Chr==CODEX[x, "Chr"],"gene_name"]
+CODEX$End_gene=unlist(lapply(1:length(CODEX$End), function(x){res=gene_info2[gene_info2$Start<= CODEX[x, "ed_bp"] &
+                                                                                 gene_info2$End>=CODEX[x, "ed_bp"] &
+                                                                                 gene_info2$Chr==CODEX[x, "chr"],"gene_name"]
                                                                 if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 #Annotation genes involved in the CNV
 
-CODEX$Involved_genes=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start>= CODEX[x, "Start"] &
-                                                                                       gene_info2$Start<=CODEX[x, "End"] &
-                                                                                       gene_info2$End<=CODEX[x, "End"] &
-                                                                                       gene_info2$End>=CODEX[x, "Start"] &
-                                                                                       gene_info2$Chr==CODEX[x, "Chr"],"gene_name"]
+CODEX$Involved_genes=unlist(lapply(1:length(CODEX$Start), function(x){res=gene_info2[gene_info2$Start>= CODEX[x, "st_bp"] &
+                                                                                       gene_info2$Start<=CODEX[x, "ed_bp"] &
+                                                                                       gene_info2$End<=CODEX[x, "ed_bp"] &
+                                                                                       gene_info2$End>=CODEX[x, "st_bp"] &
+                                                                                       gene_info2$Chr==CODEX[x, "chr"],"gene_name"]
                                                                       if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 #Annotation exon involved in the CNV for the starting and ending genes
 
 CODEX$Percentage_Start_gene=unlist(lapply(1:length(CODEX$Start), function(x){ if(is.na(CODEX[x,"Start_gene"])) { return(NA)}
                                                                               print(x)
-                                                                              res_start=gene_info2[gene_info2$Start<= CODEX[x, "Start"] &
-                                                                                                     gene_info2$End>=CODEX[x, "Start"] &
-                                                                                                     gene_info2$Chr==CODEX[x, "Chr"],"Start"]
-                                                                              res_end=gene_info2[gene_info2$Start<= CODEX[x, "Start"] &
-                                                                                                   gene_info2$End>=CODEX[x, "Start"] &
-                                                                                                   gene_info2$Chr==CODEX[x, "Chr"],"End"]
-                                                                              res=unlist(lapply(1: length(res_start), function(i){res_int=intersect(seq(res_start[i], res_end[i], 1), seq (CODEX[x,"Start"], CODEX[x, "End"],1))
+                                                                              res_start=gene_info2[gene_info2$Start<= CODEX[x, "st_bp"] &
+                                                                                                     gene_info2$End>=CODEX[x, "st_bp"] &
+                                                                                                     gene_info2$Chr==CODEX[x, "chr"],"Start"]
+                                                                              res_end=gene_info2[gene_info2$Start<= CODEX[x, "st_bp"] &
+                                                                                                   gene_info2$End>=CODEX[x, "st_bp"] &
+                                                                                                   gene_info2$Chr==CODEX[x, "chr"],"End"]
+                                                                              res=unlist(lapply(1: length(res_start), function(i){res_int=intersect(seq(res_start[i], res_end[i], 1), seq (CODEX[x,"st_bp"], CODEX[x, "ed_bp"],1))
                                                                                                                                   length(res_int)/length(seq(res_start[i], res_end[i], 1))*100
                                                                               }))
                                                                               if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 CODEX$Percentage_End_gene=unlist(lapply(1:length(CODEX$End), function(x){ if(is.na(CODEX[x,"End_gene"])) { return(NA)}
                                                                             print(x)
-                                                                            res_start=gene_info2[gene_info2$Start<= CODEX[x, "End"] &
-                                                                                                   gene_info2$End>=CODEX[x, "End"] &
-                                                                                                   gene_info2$Chr==CODEX[x, "Chr"],"Start"]
-                                                                            res_end=gene_info2[gene_info2$Start<= CODEX[x, "End"] &
-                                                                                                 gene_info2$End>=CODEX[x, "End"] &
-                                                                                                 gene_info2$Chr==CODEX[x, "Chr"],"End"]
-                                                                            res=unlist(lapply(1: length(res_start), function(i){res_int=intersect(seq(res_start[i], res_end[i], 1), seq (CODEX[x,"Start"], CODEX[x, "End"],1))
+                                                                            res_start=gene_info2[gene_info2$Start<= CODEX[x, "ed_bp"] &
+                                                                                                   gene_info2$End>=CODEX[x, "ed_bp"] &
+                                                                                                   gene_info2$Chr==CODEX[x, "chr"],"Start"]
+                                                                            res_end=gene_info2[gene_info2$Start<= CODEX[x, "ed_bp"] &
+                                                                                                 gene_info2$End>=CODEX[x, "ed_bp"] &
+                                                                                                 gene_info2$Chr==CODEX[x, "chr"],"End"]
+                                                                            res=unlist(lapply(1: length(res_start), function(i){res_int=intersect(seq(res_start[i], res_end[i], 1), seq (CODEX[x,"st_bp"], CODEX[x, "ed_bp"],1))
                                                                                                                                 length(res_int)/length(seq(res_start[i], res_end[i], 1))*100
                                                                             }))
                                                                             if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
-write.table(CODEX, file = "allChr_annotated.txt", sep='\t', quote=FALSE, row.names=FALSE)
+write.table(CODEX, file = paste(projectname,"allChr_annotated.txt",sep="_"), sep='\t', quote=FALSE, row.names=FALSE)
 

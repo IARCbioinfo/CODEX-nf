@@ -115,7 +115,6 @@ process CODEX_segmentation_perchr {
 	    
     output:
     file("*results*.txt") into results_seg
-    publishDir params.outdir, mode: 'copy'
 
     shell:
     chr_tag = chr
@@ -157,12 +156,12 @@ process annotation {
     file gtf
 	    
     output:
-    file('allChr_annotated.txt')
+    file('*allChr_annotated.txt')
     publishDir params.outdir, mode: 'move'
 
     shell:
     '''
-    Rscript !{baseDir}/bin/annotation.R !{gtf} !{outseg}
+    Rscript !{baseDir}/bin/annotation.R !{gtf} !{outseg} !{params.project}
     '''
 }
 
