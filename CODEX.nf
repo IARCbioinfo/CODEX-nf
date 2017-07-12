@@ -132,7 +132,7 @@ process CODEX_output {
         
     input:
     file seg from results_seg.collect()
-    file optKallchr from optKallchr2
+    file optKallchr from optKallchr2.collect()
 	    
     output:
     file("*codex.seg.txt") into outsegIGV
@@ -142,7 +142,7 @@ process CODEX_output {
 
     shell:
     '''
-    K=`cat !{optKallchr}`
+    K=`head -1 optKallchr.txt`
     Rscript !{baseDir}/bin/CODEX_IGV.R !{params.project} $K !{params.seg_mode} !{params.T_suffix}
     '''
 }
