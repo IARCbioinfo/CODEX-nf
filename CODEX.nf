@@ -162,7 +162,7 @@ process annotation {
 
     shell:
     '''
-    Rscript !{baseDir}/bin/CODEX_IGV.R !{gtf} !{outseg}
+    Rscript !{baseDir}/bin/annotation.R !{gtf} !{outseg}
     '''
 }
 
