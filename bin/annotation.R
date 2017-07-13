@@ -2,7 +2,7 @@
 
 ################################################################
 ####          Annotation CNV
-####                Noémie Leblay
+####                NoÃ©mie Leblay
 ################################################################
 
 args <- commandArgs(trailingOnly=TRUE)
@@ -25,6 +25,9 @@ colnames(gene_info2)[10] = "gene_name"
 colnames(gene_info2)[11] = "gene_source"
 colnames(gene_info2)[2]  = "gene_biotype"
 gene_info2               = gene_info2[,1:11]
+chr=c(1:22,"X", "Y")
+gene_info2= gene_info2[gene_info2$Chr %in% chr,]
+gene_info2$Chr=paste("chr",gene_info2$Chr,sep="")
 
 gene_info2[,"gene_name"]=gsub("^\\s+|\\s+$", "", gene_info2[,10])
 gene_info2$gene_name=unlist(lapply(gene_info2$gene_name,function(x){strsplit(x, " ")[[1]][2]}))
@@ -83,4 +86,3 @@ CODEX$Percentage_End_gene=unlist(lapply(1:length(CODEX$ed_bp), function(x){ if(i
                                                                             if( length(res)==0){NA} else{paste(res, collapse=",")}}))
 
 write.table(CODEX, file = paste(projectname,"allChr_annotated.txt",sep="_"), sep='\t', quote=FALSE, row.names=FALSE)
-
