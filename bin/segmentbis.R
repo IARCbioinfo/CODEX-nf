@@ -49,7 +49,7 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
                 }
             }
             if (length(lratio) == 1) {
-                finalmat <- (cbind(i, j, yact, lambda, chat, lratio))#[lratio > 0, ] #keep log ratios <0
+                finalmat <- (cbind(i, j, yact, lambda, chat, lratio)) #[lratio > 0, ] #keep log ratios <0
                 finalmat <- t(as.matrix(finalmat))
             }
             finalmat <- round(finalmat, digits = 3)
@@ -64,12 +64,12 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
                 mBIC[s] <- mbic
             }
             mBIC <- round(mBIC, digits = 3)
-            if (mBIC[1] > 0) {
-                finalmat <- cbind(rep(sampname_qc[sampno], nrow(finalmat)), rep(chr, nrow(finalmat)), finalmat)
-                finalmat <- cbind(finalmat, mBIC) #[1:which.max(mBIC), ]) #also print CNVs with low BIC (e.g., non-significant)
-                if( which.max(mBIC)<length(mBIC) ) finalmat[(which.max(mBIC)+1):length(mBIC),7] <- 2 #NEWLINE: put all CNVs after the max mBIC at 2
-                finalcall <- rbind(finalcall, finalmat)
-            }
+            #if (mBIC[1] > 0) { # modified to output even when the first mBIC < 0
+            finalmat <- cbind(rep(sampname_qc[sampno], nrow(finalmat)), rep(chr, nrow(finalmat)), finalmat)
+            finalmat <- cbind(finalmat, mBIC) #[1:which.max(mBIC), ]) #also print CNVs with low BIC (e.g., non-significant)
+            if( which.max(mBIC)<length(mBIC) ) finalmat[(which.max(mBIC)+1):length(mBIC),7] <- 2 #NEWLINE: put all CNVs after the max mBIC at 2
+            finalcall <- rbind(finalcall, finalmat)
+            #}
         }
     }
     finalcall <- finalcall[-1, ]
@@ -81,6 +81,7 @@ segmentbis <- function (Y_qc, Yhat, optK, K, sampname_qc, ref_qc, chr, lmax, mod
     cnvtype <- rep(NA, length(st))
     cnvtype[finalcall[, 7] < 2] <- "del"
     cnvtype[finalcall[, 7] > 2] <- "dup"
+    cnvtype[finalcall[, 7] == 2] <- "neu" #added neutral CNV flag
     if (nrow(finalcall) == 1) {
         finalcall <- t(as.matrix(c(finalcall[, 1:2], cnvtype, st, ed, (ed - st + 1)/1000, finalcall[, 3:9])))
     }
